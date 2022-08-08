@@ -1,0 +1,82 @@
+﻿@page "/CarBrands"
+@using System.Net.Http.Json
+@using ParkingLot.Shared.Models
+@using Services.Interfaces
+@inject ICarBrands _carBrandService
+@inject HttpClient Http
+@inject NavigationManager _navigationManager
+
+<PageTitle>Car Brands</PageTitle>
+<MudPaper Class="pa-16 ma-8" Elevation="0">
+    <MudTable Items="_carBrands.ToList()" MultiSelection="true" SelectedItem="Selected_CarBrand" Hover="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Select</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Ids Car Brands</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Car Brands</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Delete</MudText>
+            <MudSpacer />
+        </ToolBarContent>
+        <RowTemplate>
+            <MudSpacer />
+            <MudTd DataLabel="Id Car Brand">
+                <MudItem Typo="Typo.h6">@context.IdCarBrand</MudItem>
+            </MudTd>
+            <MudTd DataLabel="Brand Name">
+                <MudItem Typo="Typo.h6">@context.BrandName</MudItem>
+            </MudTd>
+            <MudTd>
+                <MudButton Typo="Typo.h6" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" @onclick="() => DeleteCarBrand(context.IdCarBrand)">Delete</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+    <MudText Typo="Typo.h6">Add a car brand</MudText>
+    <EditForm Model="@newCarBrand">
+        <DataAnnotationsValidator />
+        <div>
+            <MudTextField Variant="Variant.Outlined" id="BrandName" @bind-Value="newCarBrand.BrandName" />
+        </div>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" @onclick="() => CreateNewCarBrand(newCarBrand)">Create</MudButton>
+        <ValidationSummary />
+    </EditForm>
+    @*<MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" @onclick="() => Console.WriteLine(Selected_CarBrand.IdCarBrand)">Delete selected car brand</MudButton>*@
+</MudPaper>
+
+@code {
+
+    private List<CarBrand> _carBrands = new List<CarBrand>();
+
+    CarBrand newCarBrand = new CarBrand();
+
+    CarBrand Selected_CarBrand = new CarBrand();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _carBrands = await Http.GetFromJsonAsync<List<CarBrand>>("CarBrands");
+    }
+
+    public async void CreateNewCarBrand(CarBrand carBrand)
+    {
+        var message = await Http.PostAsJsonAsync<CarBrand>("CarBrands", carBrand);
+        if (message.IsSuccessStatusCode)
+        {
+            NevigateToYourUrl();
+        }
+    }
+
+    public async void DeleteCarBrand(int id)
+    {
+        var message = await Http.DeleteAsync($"CarBrands/{id}");
+        if (message.IsSuccessStatusCode)
+        {
+            NevigateToYourUrl();
+        }
+    }
+
+    void NevigateToYourUrl()
+    {
+        _navigationManager.NavigateTo("/CarBrands",true);
+    }
+}

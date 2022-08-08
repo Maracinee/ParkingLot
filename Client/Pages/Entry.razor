@@ -1,0 +1,179 @@
+﻿@page "/Entry"
+@using System.Net.Http.Json
+@using ParkingLot.Shared.Models
+@using System.Threading;
+@inject HttpClient Http
+@inject NavigationManager _navigationManager
+@inject Blazored.Localisation.Services.IBrowserDateTimeProvider browserDateTimeProvider
+
+<PageTitle>Parking Lot</PageTitle>
+<MudText Typo="Typo.h6">Current date</MudText>
+<MudTextField @bind-Value="@theTime" ReadOnly="true" Variant="Variant.Outlined" ></MudTextField>
+<MudText Typo="Typo.h6">Check in parking lot</MudText>
+<MudPaper Class="pa-16 ma-8" Elevation="0">
+    <MudTable Items="_cars.ToList()" MultiSelection="true" SelectedItems="_selectedCar" Hover="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Select</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Id Car</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Car Type</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Brand Name</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Registration Number</MudText>
+        </ToolBarContent>
+        <RowTemplate>
+            <MudSpacer />
+            <MudTd DataLabel="Id Car">
+                <MudItem Typo="Typo.h6">@context.IdCar</MudItem>
+            </MudTd>
+            <MudSpacer />
+            <MudTd DataLabel="Type Name">
+                <MudItem Typo="Typo.h6">@context.TypeName</MudItem>
+            </MudTd>
+            <MudSpacer />
+            <MudTd DataLabel="BrandName">
+                <MudItem Typo="Typo.h6">@context.BrandName</MudItem>
+            </MudTd>
+            <MudSpacer />
+            <MudTd DataLabel="RegistrationNumber">
+                <MudItem Typo="Typo.h6">@context.RegistrationNumber</MudItem>
+            </MudTd>
+            <MudSpacer />
+        </RowTemplate>
+    </MudTable>
+    <EditForm Model="@newEntry">
+        <DataAnnotationsValidator />
+        <MudSelect T="Gate" @bind-Value="_selectedEntryGate" Label="Gate" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+            @foreach(var elem in _gates.ToList())
+            {
+                <MudSelectItem Value="@elem">@elem.GateNumber</MudSelectItem>
+            }
+        </MudSelect>
+        <div>
+            <MudTextField Label="Ticket Number" Variant="Variant.Outlined" id="TicketNumber" @bind-Value="newEntry.TicketNumber" />
+        </div>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" @onclick="() => CreateNewEntry(newEntry)">Create</MudButton>
+        <ValidationSummary />
+    </EditForm>
+</MudPaper>
+<MudText Typo="Typo.h6">Cars in parking lot</MudText>
+<MudPaper Class="pa-16 ma-8" Elevation="0">
+    <MudTable Items="_parkingLot.ToList()" MultiSelection="true" SelectedItems="_selectCarInParkingLot" Hover="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Select</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Id Entry</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Registration Number</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Ticket Number</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Entry Date</MudText>
+        </ToolBarContent>
+        <RowTemplate>
+            <MudSpacer />
+            <MudTd DataLabel="IdEntry">
+                <MudItem Typo="Typo.h6">@context.IdEntry</MudItem>
+            </MudTd>
+            <MudSpacer />
+            <MudTd DataLabel="RegistrationNumber">
+                <MudItem Typo="Typo.h6">@context.RegistrationNumber</MudItem>
+            </MudTd>
+            <MudSpacer />
+            <MudTd DataLabel="TicketNumber">
+                <MudItem Typo="Typo.h6">@context.TicketNumber</MudItem>
+            </MudTd>
+            <MudSpacer />
+            <MudTd DataLabel="EntryDate">
+                <MudItem Typo="Typo.h6">@context.EntryDate</MudItem>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+    <EditForm Model="@newExit">
+        <DataAnnotationsValidator />
+        <MudSelect T="Gate" @bind-Value="_selectedExitGate" Label="Gate" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+            @foreach(var elem in _gates.ToList())
+            {
+                <MudSelectItem Value="@elem">@elem.GateNumber</MudSelectItem>
+            }
+        </MudSelect>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" @onclick="() => CheckOutCar(newExit)">Check Out</MudButton>
+        <ValidationSummary />
+    </EditForm>
+</MudPaper>
+
+@code {
+
+    string theTime;    
+    Timer aTimer;
+
+    private List<SelectCarsResult> _cars = new List<SelectCarsResult>();
+    private List<CarType> _carTypes = new List<CarType>();
+    private List<CarBrand> _carBrands = new List<CarBrand>();
+    private List<Gate> _gates = new List<Gate>();
+    private List<Car> _carsComplete = new List<Car>();
+    private List<SelectCarsInParkingLotResult> _parkingLot = new List<SelectCarsInParkingLotResult>();
+
+    Gate _selectedEntryGate, _selectedExitGate;
+    SelectCarsInParkingLotResult _selectedEntry;
+    HashSet<SelectCarsResult> _selectedCar = new HashSet<SelectCarsResult>();
+    HashSet<SelectCarsInParkingLotResult> _selectCarInParkingLot = new HashSet<SelectCarsInParkingLotResult>();
+
+    ParkingLot.Shared.Models.Entry newEntry = new ParkingLot.Shared.Models.Entry();
+    Exit newExit = new Exit();
+
+    protected async override Task OnInitializedAsync()
+    {
+        aTimer = new Timer(Tick, null, 0, 1000);
+        _cars = await Http.GetFromJsonAsync<List<SelectCarsResult>>("Cars");
+        _carTypes = await Http.GetFromJsonAsync<List<CarType>>("CarTypes");
+        _carBrands = await Http.GetFromJsonAsync<List<CarBrand>>("CarBrands");
+        _gates = await Http.GetFromJsonAsync<List<Gate>>("Gates");
+        _parkingLot = await Http.GetFromJsonAsync<List<SelectCarsInParkingLotResult>>("Entries");
+    }
+
+    private void Tick(object _)
+    {
+        theTime = DateTime.Now.ToString();
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        aTimer?.Dispose();
+    }
+
+    public async void CreateNewEntry(ParkingLot.Shared.Models.Entry newEntry)
+    {
+        newEntry.EntryDate = Convert.ToDateTime(theTime);
+        newEntry.IdEntryGate = _selectedEntryGate.IdGate;
+        newEntry.IdCar = _selectedCar.ToList().FirstOrDefault().IdCar;
+        var message = await Http.PostAsJsonAsync<ParkingLot.Shared.Models.Entry>("Entries", newEntry);
+        if (message.IsSuccessStatusCode)
+        {
+            NevigateToYourUrl();
+        }
+    }
+
+    public async void CheckOutCar(Exit newExit)
+    {
+        newExit.ExitDate = Convert.ToDateTime(theTime);
+        newExit.IdExitGate = _selectedExitGate.IdGate;
+        newExit.IdCar = _selectCarInParkingLot.ToList().FirstOrDefault().IdCar;
+        newExit.TicketNumber = _selectCarInParkingLot.ToList().FirstOrDefault().TicketNumber;
+        var toDelete = _selectCarInParkingLot.ToList().FirstOrDefault().IdEntry;
+        var messagePost = await Http.PostAsJsonAsync<Exit>("Exits", newExit);
+        var messageDelete = await Http.DeleteAsync($"Entries/{toDelete}");
+        if(messagePost.IsSuccessStatusCode && messageDelete.IsSuccessStatusCode)
+        {
+            NevigateToYourUrl();
+        }
+    }
+
+    void NevigateToYourUrl()
+    {
+        _navigationManager.NavigateTo("/Entry",true);
+    }
+}

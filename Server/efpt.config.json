@@ -1,0 +1,67 @@
+﻿{
+   "CodeGenerationMode": 2,
+   "ContextClassName": "ParkingLotContext",
+   "ContextNamespace": "Data",
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": "Models",
+   "OutputContextPath": "Data",
+   "OutputPath": "Models",
+   "ProjectRootNamespace": "ParkingLot.Server",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "[dbo].[Car]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CarBrand]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CarType]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Entry]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Exit]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Gate]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SelectCars]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[SelectCarsInParkingLot]",
+         "ObjectType": 1
+      }
+   ],
+   "UiHint": "(LocalDb)\\ParkingLot.ParkingLot",
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoConstructor": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false
+}

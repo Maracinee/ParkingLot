@@ -1,0 +1,81 @@
+﻿@page "/CarTypes"
+@using System.Net.Http.Json
+@using ParkingLot.Shared.Models
+@using Services.Interfaces
+@inject ICarTypes _carTypesService
+@inject HttpClient Http
+@inject NavigationManager _navigationManager
+
+<PageTitle>Car Types</PageTitle>
+<MudPaper Class="pa-16 ma-8" Elevation="0">
+    <MudTable Items="_carTypes.ToList()" MultiSelection="true" SelectedItem="Selected_CarType" Hover="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Select</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Ids Car Type</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Car Types</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Delete</MudText>
+            <MudSpacer />
+        </ToolBarContent>
+        <RowTemplate>
+            <MudSpacer />
+            <MudTd DataLabel="Id Car Types">
+                <MudItem Typo="Typo.h6">@context.IdCarType</MudItem>
+            </MudTd>
+            <MudTd DataLabel="Type Name">
+                <MudItem Typo="Typo.h6">@context.TypeName</MudItem>
+            </MudTd>
+            <MudTd>
+                <MudButton Typo="Typo.h6" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" @onclick="() => DeleteCarType(context.IdCarType)">Delete</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+    <MudText Typo="Typo.h6">Add a car type</MudText>
+    <EditForm Model="@newCarType">
+        <DataAnnotationsValidator />
+        <div>
+            <MudTextField Variant="Variant.Outlined" id="TypeName" @bind-Value="newCarType.TypeName" />
+        </div>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" @onclick="() => CreateNewCarType(newCarType)">Create</MudButton>
+        <ValidationSummary />
+    </EditForm>
+</MudPaper>
+
+@code {
+
+    private List<CarType> _carTypes = new List<CarType>();
+
+    CarType newCarType = new CarType();
+
+    CarType Selected_CarType = new CarType();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _carTypes = await Http.GetFromJsonAsync<List<CarType>>("CarTypes");
+    }
+
+    public async void CreateNewCarType(CarType carType)
+    {
+        var message = await Http.PostAsJsonAsync<CarType>("CarTypes", carType);
+        if (message.IsSuccessStatusCode)
+        {
+            NevigateToYourUrl();
+        }
+    }
+
+    public async void DeleteCarType(int id)
+    {
+        var message = await Http.DeleteAsync($"CarTypes/{id}");
+        if (message.IsSuccessStatusCode)
+        {
+            NevigateToYourUrl();
+        }
+    }
+
+    void NevigateToYourUrl()
+    {
+        _navigationManager.NavigateTo("/CarTypes",true);
+    }
+}

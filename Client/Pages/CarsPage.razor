@@ -1,0 +1,110 @@
+﻿@page "/Cars"
+@using System.Net.Http.Json
+@using ParkingLot.Shared.Models
+@inject HttpClient Http
+@inject NavigationManager _navigationManager
+
+<PageTitle>Cars</PageTitle>
+<MudPaper Class="pa-16 ma-8" Elevation="0">
+    <MudTable Items="_cars.ToList()" MultiSelection="true" SelectedItem="Selected_Car" Hover="true">
+        <ToolBarContent>
+            <MudText Typo="Typo.h6">Select</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Id Car</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Car Type</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Brand Name</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Registration Number</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h6">Delete</MudText>
+            <MudSpacer />
+        </ToolBarContent>
+        <RowTemplate>
+            <MudSpacer />
+            <MudTd DataLabel="Id Car">
+                <MudItem Typo="Typo.h6">@context.IdCar</MudItem>
+            </MudTd>
+            <MudTd DataLabel="Type Name">
+                <MudItem Typo="Typo.h6">@context.TypeName</MudItem>
+            </MudTd>
+            <MudTd DataLabel="BrandName">
+                <MudItem Typo="Typo.h6">@context.BrandName</MudItem>
+            </MudTd>
+            <MudTd DataLabel="RegistrationNumber">
+                <MudItem Typo="Typo.h6">@context.RegistrationNumber</MudItem>
+            </MudTd>
+            <MudTd>
+                <MudButton Typo="Typo.h6" ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" @onclick="() => DeleteCar(context.IdCar)">Delete</MudButton>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+    <MudText Typo="Typo.h6">Add a car</MudText>
+    <EditForm Model="@newCar">
+        <DataAnnotationsValidator />
+        <MudSelect T="CarType" @bind-Value="_selectedCarType" Label="Car Type" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+            @foreach(var elem in _carTypes.ToList())
+            {
+                <MudSelectItem Value="@elem">@elem.TypeName</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="CarBrand" @bind-Value="_selectedCarBrand" Label="Car Brand" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+            @foreach(var elem in _carBrands.ToList())
+            {
+                <MudSelectItem  Value="@elem">@elem.BrandName</MudSelectItem>
+            }
+        </MudSelect>
+        <div>
+            <MudTextField Label="Registration Number" Variant="Variant.Outlined" id="TypeName" @bind-Value="newCar.RegistrationNumber" />
+        </div>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" @onclick="() => CreateNewCar(newCar)">Create</MudButton>
+        <ValidationSummary />
+    </EditForm>
+</MudPaper>
+
+@code {
+
+    private List<SelectCarsResult> _cars = new List<SelectCarsResult>();
+    private List<CarType> _carTypes = new List<CarType>();
+    private List<CarBrand> _carBrands = new List<CarBrand>();
+
+    CarType _selectedCarType;
+    CarBrand _selectedCarBrand;
+
+    Car newCar = new Car();
+
+    SelectCarsResult Selected_Car = new SelectCarsResult();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _cars = await Http.GetFromJsonAsync<List<SelectCarsResult>>("Cars");
+        _carTypes = await Http.GetFromJsonAsync<List<CarType>>("CarTypes");
+        _carBrands = await Http.GetFromJsonAsync<List<CarBrand>>("CarBrands");
+    }
+
+    public async void DeleteCar(int id)
+    {
+        var message = await Http.DeleteAsync($"Cars/{id}");
+        if (message.IsSuccessStatusCode)
+        {
+            NevigateToYourUrl();
+        }
+    }
+
+    public async void CreateNewCar(Car car)
+    {
+        car.IdCarBrand = _selectedCarBrand.IdCarBrand;
+        car.IdCarType = _selectedCarType.IdCarType;
+        var message = await Http.PostAsJsonAsync<Car>("Cars", car);
+        if (message.IsSuccessStatusCode)
+        {
+            NevigateToYourUrl();
+        }
+    }
+
+    void NevigateToYourUrl()
+    {
+        _navigationManager.NavigateTo("/Cars",true);
+    }
+}
