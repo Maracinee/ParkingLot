@@ -5,6 +5,7 @@
 @inject ICarBrands _carBrandService
 @inject HttpClient Http
 @inject NavigationManager _navigationManager
+@inject IDialogService DialogService
 
 <PageTitle>Car Brands</PageTitle>
 <MudPaper Class="pa-16 ma-8" Elevation="0">
@@ -48,6 +49,8 @@
 
     private List<CarBrand> _carBrands = new List<CarBrand>();
 
+    bool validate = false;
+
     CarBrand newCarBrand = new CarBrand();
 
     CarBrand Selected_CarBrand = new CarBrand();
@@ -59,10 +62,28 @@
 
     public async void CreateNewCarBrand(CarBrand carBrand)
     {
-        var message = await Http.PostAsJsonAsync<CarBrand>("CarBrands", carBrand);
-        if (message.IsSuccessStatusCode)
+        var message = new HttpResponseMessage();
+        foreach(var item in _carBrands.ToList())
         {
-            NevigateToYourUrl();
+            if(carBrand.BrandName == item.BrandName)
+            {
+                validate = true;
+            }
+        }
+        if(validate == false)
+        {
+            message = await Http.PostAsJsonAsync<CarBrand>("CarBrands", carBrand);
+            if (message.IsSuccessStatusCode)
+            {
+                validate = false;
+                NevigateToYourUrl();
+            }
+        }
+        else
+        {
+            var options = new DialogOptions { CloseOnEscapeKey = true };
+            DialogService.Show<Dialog>("Brand deja inregistrat", options);
+            validate = false;
         }
     }
 

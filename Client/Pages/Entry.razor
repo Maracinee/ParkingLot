@@ -5,6 +5,7 @@
 @inject HttpClient Http
 @inject NavigationManager _navigationManager
 @inject Blazored.Localisation.Services.IBrowserDateTimeProvider browserDateTimeProvider
+@inject IDialogService DialogService
 
 <PageTitle>Parking Lot</PageTitle>
 <MudText Typo="Typo.h6">Current date</MudText>
@@ -116,6 +117,8 @@
     private List<Car> _carsComplete = new List<Car>();
     private List<SelectCarsInParkingLotResult> _parkingLot = new List<SelectCarsInParkingLotResult>();
 
+    bool validatePost = false;
+
     Gate _selectedEntryGate, _selectedExitGate;
     SelectCarsInParkingLotResult _selectedEntry;
     HashSet<SelectCarsResult> _selectedCar = new HashSet<SelectCarsResult>();
@@ -150,10 +153,28 @@
         newEntry.EntryDate = Convert.ToDateTime(theTime);
         newEntry.IdEntryGate = _selectedEntryGate.IdGate;
         newEntry.IdCar = _selectedCar.ToList().FirstOrDefault().IdCar;
-        var message = await Http.PostAsJsonAsync<ParkingLot.Shared.Models.Entry>("Entries", newEntry);
-        if (message.IsSuccessStatusCode)
+        var message = new HttpResponseMessage();
+        foreach(var carVal in _parkingLot.ToList())
         {
-            NevigateToYourUrl();
+            if(carVal.IdCar == newEntry.IdCar)
+            {
+                validatePost = true;
+            }
+        }
+        if(validatePost == false)
+        {
+            message = await Http.PostAsJsonAsync<ParkingLot.Shared.Models.Entry>("Entries", newEntry);
+            if (message.IsSuccessStatusCode)
+            {
+                validatePost = false;
+                NevigateToYourUrl();
+            }
+        }
+        else
+        {
+            var options = new DialogOptions { CloseOnEscapeKey = true };
+            DialogService.Show<Dialog>("Masina se afla deja in parcare", options);
+            validatePost = false;
         }
     }
 

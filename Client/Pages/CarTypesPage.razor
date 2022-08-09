@@ -5,6 +5,7 @@
 @inject ICarTypes _carTypesService
 @inject HttpClient Http
 @inject NavigationManager _navigationManager
+@inject IDialogService DialogService
 
 <PageTitle>Car Types</PageTitle>
 <MudPaper Class="pa-16 ma-8" Elevation="0">
@@ -47,6 +48,8 @@
 
     private List<CarType> _carTypes = new List<CarType>();
 
+    bool validatePost = false;
+
     CarType newCarType = new CarType();
 
     CarType Selected_CarType = new CarType();
@@ -58,10 +61,28 @@
 
     public async void CreateNewCarType(CarType carType)
     {
-        var message = await Http.PostAsJsonAsync<CarType>("CarTypes", carType);
-        if (message.IsSuccessStatusCode)
+        var message = new HttpResponseMessage();
+        foreach(var carVal in _carTypes.ToList())
         {
-            NevigateToYourUrl();
+            if(carType.TypeName == carVal.TypeName)
+            {
+                validatePost = true;
+            }
+        }
+        if(validatePost == false)
+        {
+            message = await Http.PostAsJsonAsync<CarType>("CarTypes", carType);
+            if (message.IsSuccessStatusCode)
+            {
+                validatePost = false;
+                NevigateToYourUrl();
+            }
+        }
+        else
+        {
+            var options = new DialogOptions { CloseOnEscapeKey = true };
+            DialogService.Show<Dialog>("Tip masina deja inregistrat", options);
+            validatePost = false;
         }
     }
 
