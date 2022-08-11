@@ -8,10 +8,10 @@
 @inject IDialogService DialogService
 
 <PageTitle>Parking Lot</PageTitle>
+<MudPaper Class="pa-16 ma-8" Elevation="0">
 <MudText Typo="Typo.h6">Current date</MudText>
 <MudTextField @bind-Value="@theTime" ReadOnly="true" Variant="Variant.Outlined" ></MudTextField>
 <MudText Typo="Typo.h6">Check in parking lot</MudText>
-<MudPaper Class="pa-16 ma-8" Elevation="0">
     <MudTable Items="_cars.ToList()" MultiSelection="true" SelectedItems="_selectedCar" Hover="true">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Select</MudText>
@@ -58,9 +58,7 @@
         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" @onclick="() => CreateNewEntry(newEntry)">Create</MudButton>
         <ValidationSummary />
     </EditForm>
-</MudPaper>
 <MudText Typo="Typo.h6">Cars in parking lot</MudText>
-<MudPaper Class="pa-16 ma-8" Elevation="0">
     <MudTable Items="_parkingLot.ToList()" MultiSelection="true" SelectedItems="_selectCarInParkingLot" Hover="true">
         <ToolBarContent>
             <MudText Typo="Typo.h6">Select</MudText>
@@ -104,7 +102,6 @@
         <ValidationSummary />
     </EditForm>
 </MudPaper>
-
 @code {
 
     string theTime;    
