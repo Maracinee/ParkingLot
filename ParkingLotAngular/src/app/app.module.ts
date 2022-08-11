@@ -19,6 +19,7 @@ import { CarBrandsComponent } from './components/car-brands/car-brands.component
 import { CarTypesComponent } from './components/car-types/car-types.component';
 import { CarsComponent } from './components/cars/cars.component';
 import { ParkingLotComponent } from './components/parking-lot/parking-lot.component';
+import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { ParkingLotComponent } from './components/parking-lot/parking-lot.compon
     CarBrandsComponent,
     CarTypesComponent,
     CarsComponent,
-    ParkingLotComponent
+    ParkingLotComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
