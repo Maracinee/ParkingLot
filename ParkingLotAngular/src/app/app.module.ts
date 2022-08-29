@@ -20,6 +20,12 @@ import { CarTypesComponent } from './components/car-types/car-types.component';
 import { CarsComponent } from './components/cars/cars.component';
 import { ParkingLotComponent } from './components/parking-lot/parking-lot.component';
 import { HomeComponent } from './components/home/home.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { TableCarbrandsComponent } from './components/table-carbrands/table-carbrands.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +36,8 @@ import { HomeComponent } from './components/home/home.component';
     CarTypesComponent,
     CarsComponent,
     ParkingLotComponent,
-    HomeComponent
+    HomeComponent,
+    TableCarbrandsComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +49,15 @@ import { HomeComponent } from './components/home/home.component';
     MatSidenavModule,
     MatListModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatTableModule,
+    MatCheckboxModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule
+  ],
+  exports: [
+    MatFormFieldModule
   ],
   providers: [],
   bootstrap: [AppComponent]

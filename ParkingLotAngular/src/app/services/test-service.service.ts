@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class TestServiceService {
 
-  private baseUrl = 'https://localhost:7135/api/CarTypes/1';
+  private baseUrl = 'https://localhost:7135/api/CarTypes/';
 
   constructor(private http : HttpClient) { }
 

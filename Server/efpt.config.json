@@ -38,6 +38,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[DeleteCarBrands]",
+         "ObjectType": 1
+      },
+      {
+         "Name": "[dbo].[DeleteCarTypes]",
+         "ObjectType": 1
+      },
+      {
          "Name": "[dbo].[SelectCars]",
          "ObjectType": 1
       },

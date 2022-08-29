@@ -1,0 +1,22 @@
+<table class="mat-elevation-z8">
+    <thead>
+        <th>Select</th>
+        <th>Id</th>
+        <th>Brand</th>
+    </thead>
+    <tbody *ngFor="let carBrand of _carBrands">
+        <tr>
+            <td><input type="checkbox" (click)="rowSelected(carBrand)"></td>
+            <td>{{carBrand.idCarBrand}}</td>
+            <td>{{carBrand.brandName}}</td>
+        </tr>
+    </tbody>
+</table>
+<button type="Submit" class="btn btn-primary" (click)="deleteButton()">Delete</button>
+<h1>Add a car brand</h1>
+<form [formGroup]="formGroup">
+    <input formControlName="newCarBrandName" required>
+    <a [routerLink]="'/car-brands'">
+        <button type="submit" color="primary" (click)="createCarBrand()">Create</button>
+    </a>
+</form>

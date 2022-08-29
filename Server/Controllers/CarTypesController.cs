@@ -110,7 +110,7 @@ namespace ParkingLot.Server.Controllers
                 return NotFound();
             }
 
-            _context.CarTypes.Remove(carType);
+            _context.Procedures.DeleteCarTypesAsync(carType.IdCarType);
             await _context.SaveChangesAsync();
 
             return NoContent();

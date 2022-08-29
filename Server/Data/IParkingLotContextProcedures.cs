@@ -12,6 +12,8 @@ namespace ParkingLot.Server.Data
 {
     public partial interface IParkingLotContextProcedures
     {
+        Task<int> DeleteCarBrandsAsync(int? idCarBrand, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);
+        Task<int> DeleteCarTypesAsync(int? idCarType, OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);
         Task<List<SelectCarsResult>> SelectCarsAsync(OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);
         Task<List<SelectCarsInParkingLotResult>> SelectCarsInParkingLotAsync(OutputParameter<int> returnValue = null, CancellationToken cancellationToken = default);
     }
