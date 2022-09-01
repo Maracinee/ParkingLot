@@ -21,22 +21,24 @@ export class TableCarbrandsComponent implements OnInit {
   idSelectedCarBrand : number;
   status : string;
 
+  listExists: boolean = false;
+
   constructor(private _carBrandsService: CarBrandsService) { }
 
   ngOnInit(): void {
     this.createForm();
     this._carBrandsService.getCarBrands().subscribe(data =>{
       this._carBrands = data;
+      if(data.length != 0){
+        this.listExists = true;
+        console.log(this.listExists);
+      }
     });
   }
 
   rowSelected(selector : CarBrands){
     this._selectedCarBrand = selector;
     console.log(this._selectedCarBrand);
-  }
-
-  public test(){
-    console.log("am intrat");
   }
 
   public createForm(){
@@ -50,6 +52,10 @@ export class TableCarbrandsComponent implements OnInit {
     this.newCarBrand = new CarBrands(0,this.newCarBrandName);
     this._carBrandsService.createCarBrand(this.newCarBrand).subscribe(data => {
       this._carBrands.push(data as CarBrands);
+      if(data != null){
+        this.listExists = true;
+        console.log(this.listExists);
+      }
     });
   }
 
@@ -57,6 +63,10 @@ export class TableCarbrandsComponent implements OnInit {
     console.log(this._selectedCarBrand.idCarBrand);
     this._carBrandsService.deleteCarBrand(this._selectedCarBrand.idCarBrand)?.subscribe(() => {
       this._carBrands.pop();
+      if(this._carBrands.length == 0){
+        this.listExists = false;
+        console.log(this.listExists);
+      }
     });
   }
 

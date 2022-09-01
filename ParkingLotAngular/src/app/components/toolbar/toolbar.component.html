@@ -1,13 +1,20 @@
-<mat-toolbar color="primary">
-    <mat-toolbar-row>
-      <h1>Parking Lot</h1>
-      <span class="menu-spacer"></span>
-      <div>
-        <a mat-button [routerLink]="'/'"> Dashboard </a>
-        <a mat-button [routerLink]="'/car-brands'"> Car Brands </a>
-        <a mat-button [routerLink]="'/car-types'"> Car Types </a>
-        <a mat-button [routerLink]="'/cars'"> Cars </a>
-        <a mat-button [routerLink]="'/parking-lot'"> Parking Lot </a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <span class="menu-spacer"></span>
+      <div class="navbar-header">
+        <a class="navbar-brand" [routerLink]="'/'" style="font-weight:bold"> Parking Lot </a>
       </div>
-    </mat-toolbar-row>
-</mat-toolbar>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link active" [routerLink]="'/car-brands'" style="font-weight:bold"> Car Brands </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" [routerLink]="'/car-types'" style="font-weight:bold"> Car Types </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" [routerLink]="'/cars'" style="font-weight:bold"> Cars </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" [routerLink]="'/parking-lot'" style="font-weight:bold"> Parking Lot </a>
+        </li>
+      </ul>
+</nav>

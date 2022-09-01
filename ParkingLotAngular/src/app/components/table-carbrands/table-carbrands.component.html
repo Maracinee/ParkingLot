@@ -1,22 +1,24 @@
-<table class="mat-elevation-z8">
+<table class="table table-dark">
     <thead>
-        <th>Select</th>
-        <th>Id</th>
-        <th>Brand</th>
+        <th style="font-weight:bold">Select</th>
+        <th style="font-weight:bold">Id</th>
+        <th style="font-weight:bold">Brand</th>
     </thead>
     <tbody *ngFor="let carBrand of _carBrands">
         <tr>
-            <td><input type="checkbox" (click)="rowSelected(carBrand)"></td>
-            <td>{{carBrand.idCarBrand}}</td>
-            <td>{{carBrand.brandName}}</td>
+            <td><input type="checkbox" (change)="rowSelected(carBrand)"></td>
+            <td style="font-weight:bold">{{carBrand.idCarBrand}}</td>
+            <td style="font-weight:bold">{{carBrand.brandName}}</td>
         </tr>
     </tbody>
 </table>
-<button type="Submit" class="btn btn-primary" (click)="deleteButton()">Delete</button>
-<h1>Add a car brand</h1>
+<div [hidden]="!listExists">
+    <button type="Submit" class="btn btn-dark" (click)="deleteButton()" style="margin-left: 20px;">Delete</button>
+</div>
+<h1 style="font-size: 1.5rem; margin:auto; text-align: left; margin-top: 20px;">Add a car brand</h1>
 <form [formGroup]="formGroup">
     <input formControlName="newCarBrandName" required>
     <a [routerLink]="'/car-brands'">
-        <button type="submit" color="primary" (click)="createCarBrand()">Create</button>
+        <button class="btn btn-dark" type="submit" (click)="createCarBrand()" style="margin-left: 20px;">Create</button>
     </a>
 </form>

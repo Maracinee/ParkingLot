@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import {HttpClientModule} from '@angular/common/http';
-import { TestAPIComponentComponent } from './test-apicomponent/test-apicomponent.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatSliderModule } from '@angular/material/slider';
@@ -30,7 +29,6 @@ import { TableCarbrandsComponent } from './components/table-carbrands/table-carb
 @NgModule({
   declarations: [
     AppComponent,
-    TestAPIComponentComponent,
     ToolbarComponent,
     CarBrandsComponent,
     CarTypesComponent,
