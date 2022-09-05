@@ -43,6 +43,10 @@ export class ParkingLotComponent implements OnInit {
   ngOnInit(): void {
     this.time$ = this.getDate();
     this.createForm();
+    this.getData();
+  }
+
+  getData(): void{
     this._carsService.getCars().subscribe(data =>{
       this._cars = data;
     });
@@ -65,9 +69,7 @@ export class ParkingLotComponent implements OnInit {
     this.newEntry = new Entries(0,this.selectedGate,this._selectedCar.idCar,new Date(),ticket);
     this._entriesService.createEntry(this.newEntry).subscribe(data => {
       this._entries.push(data as Entries);
-    });
-    this._entriesService.getEntries().subscribe(data =>{
-      this._carsInParkingLot = data;
+      this.getData();
     });
   }
 
@@ -88,7 +90,7 @@ export class ParkingLotComponent implements OnInit {
   private getDateTime(){
     this.CurrentDate.setSeconds(this.CurrentDate.getSeconds() +1);
     return (
-      this.CurrentDate.getDay() + 
+      this.CurrentDate.getUTCDay() + 
       '/' +
       this.CurrentDate.getMonth() + 
       '/' +
@@ -118,9 +120,7 @@ export class ParkingLotComponent implements OnInit {
     });
     this._entriesService.deleteEntry(this._selectedCarInParkingLot.idEntry)?.subscribe(() => {
       this._entries.pop();
-    });
-    this._entriesService.getEntries().subscribe(data =>{
-      this._carsInParkingLot = data;
+      this.getData();
     });
   }
 

@@ -39,7 +39,6 @@ export class CarsComponent implements OnInit {
       this._cars = data;
       if(data.length != 0){
         this.listExists = true;
-        console.log(this.listExists);
       }
     });
 
@@ -61,7 +60,6 @@ export class CarsComponent implements OnInit {
 
   rowSelected(selector : Cars){
     this._selectedCar = selector;
-    console.log(this._selectedCar);
   }
 
   updateSelectedBrand(e: Event){
@@ -81,7 +79,6 @@ export class CarsComponent implements OnInit {
       this._cars.push(data as Cars);
       if(data != null){
         this.listExists = true;
-        console.log(this.listExists);
       }
     });
   }
@@ -92,7 +89,6 @@ export class CarsComponent implements OnInit {
       this._cars.pop();
       if(this._cars.length == 0){
         this.listExists = false;
-        console.log(this.listExists);
       }
     });
   }

@@ -5,22 +5,6 @@ import { CarTypesComponent } from './components/car-types/car-types.component';
 import { CarsComponent } from './components/cars/cars.component';
 import { HomeComponent } from './components/home/home.component';
 import { ParkingLotComponent } from './components/parking-lot/parking-lot.component';
-import { ToolbarComponent } from './components/toolbar/toolbar.component';
-
-/*const DASHBOARD_ROUTES: Routes = [
-  {
-    path: '',
-    component: ToolbarComponent,
-    children: [
-      {
-        path: 'car-brands',
-        loadChildren: () => import('./components/car-brands/car-brands.component').then((m) => m.CarBrandsComponent)
-      }
-    ]
-  },
-];
-*/
-
 
 const routes: Routes = [
   { 
